@@ -1,0 +1,15 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+ "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+ "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+   <session-factory>
+      <mapping class="com.pro.ereader.domain.UserDomain"/>  
+      <mapping class="com.pro.ereader.domain.VendorDomain"/> 
+      <mapping class="com.pro.ereader.domain.BookDomain"/>  
+      <mapping class="com.pro.ereader.domain.VendorPurchaseDomain"/>   
+      <mapping class="com.pro.ereader.domain.MembershipDomain"/>  
+      <mapping class="com.pro.ereader.domain.UserBookTxnDomain"/>  
+	</session-factory>
+</hibernate-configuration>
+

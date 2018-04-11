@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans default-init-method="init"
+		xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd" >
+
+	<aop:aspectj-autoproxy/>
+		
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"  />
+	
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">          
+	 	<property name="jndiName" value="jdbc/EREADERDATASOURCE"/>         
+	 	<property name="lookupOnStartup" value="false"/>         
+	 	<property name="cache" value="true" />          
+	 	<property name="proxyInterface"  value="javax.sql.DataSource" />    
+	 	<property name="resourceRef" value="true"/>  
+ 	</bean>
+ 	
+ 	 <!-- Hibernate SessionFactory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource">
+             <ref bean="dataSource"/>
+           </property>
+          <property name="configLocation">
+            <value>classpath:hibernate.cfg.xml</value>
+          </property>            
+          <property  name="configurationClass">
+            <value>org.hibernate.cfg.AnnotationConfiguration</value>
+          </property>      
+        <property name="hibernateProperties">
+            <props>
+              <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+               
+<!--  					<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+ -->             
+                 <prop key="hibernate.bytecode.provider">javassist</prop>
+                 <prop key="hibernate.show_sql">true</prop>
+                 <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                 <prop key="hibernate.cache.use_query_cache">true</prop>
+                <prop key="hibernate.cache.region.factory_class">net.sf.ehcache.hibernate.EhCacheRegionFactory</prop>
+                <prop key="hibernate.hbm2ddl.auto">create</prop>  
+                <prop key="hibernate.connection.datasource">jdbc/EREADERDATASOURCE</prop>           
+                 
+             
+            </props>
+        </property>
+    </bean>
+	
+   	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+    <bean id="lobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler">
+        <property name="nativeJdbcExtractor" ref="nativeJdbcExtractor"/>
+    </bean>
+
+    <bean id="nativeJdbcExtractor" class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor"/>
+    
+  	
+</beans>
